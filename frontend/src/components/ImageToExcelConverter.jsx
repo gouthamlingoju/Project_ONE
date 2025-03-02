@@ -78,6 +78,7 @@ const ImageToExcelConverter = () => {
     setProcessedFiles([]);
     try {
       console.log("Converting....",selectedFiles.length,typeof selectedYear);
+      console.log(selectedBoard,selectedStandard)
       const result =[];
       for (const file of selectedFiles) {
         const formData = new FormData();
@@ -92,7 +93,7 @@ const ImageToExcelConverter = () => {
         if (response.ok) {
           const data = await response.json();
           const processed_file=[data.AI,file]
-          console.log('Data:', processed_file);
+          console.log('Data:', data);
           setProcessedFiles(prev => [...prev, processed_file]);
           // console.log("Processed Files:",processedFiles);
         }else{

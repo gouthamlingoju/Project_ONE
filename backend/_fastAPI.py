@@ -8,9 +8,10 @@ from starlette.middleware.cors import CORSMiddleware
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from test import General_Prompt,Prompt_SSC,append_to_excel
+from test import append_to_excel, process_certificate
+from test1 import postProcess_CBSE_SSC,postProcess_State_Inter,postProcess_State_SSC
+from test import Prompt_Inter_CBSE,Prompt_Inter_ICSE,Prompt_SSC_CBSE,Prompt_SSC_ICSE,Prompt_SSC_State,Prompt_Inter_State
 import json
-from pydantic import BaseModel
 
 file_path_new=''
 Standard = ""
@@ -40,12 +41,32 @@ async def upload_files(standard : str = Form(...),
                        board :str = Form(...),
                        year : int = Form(...),
                        file: UploadFile = File(...)):
-    global file_path_new,Standard,Board,Year
+    global file_path_new,Standard,Board,Year,General_Prompt
     Standard = "SSC" if standard=="10th Grade" else "Inter"
     Board = board
     Year = year
-    if os.path.exists('certificates.xlsx'):
-        os.remove('certificates.xlsx')
+    if standard=="10th Grade":
+        if board=="State Board":
+            General_Prompt=Prompt_SSC_State
+            process_certificate=postProcess_State_SSC
+        if board=="CBSE":
+            General_Prompt=Prompt_SSC_CBSE
+            process_certificate=postProcess_CBSE_SSC
+        if board=="ICSE":
+            General_Prompt=Prompt_SSC_ICSE
+            process_certificate=process_certificate
+    if standard=="Intermediate":
+        if board=="State Board":
+            General_Prompt=Prompt_Inter_State
+            process_certificate=postProcess_State_Inter
+        if board=="CBSE":
+            General_Prompt=Prompt_Inter_CBSE
+            process_certificate=process_certificate
+        if board=="ICSE":
+            General_Prompt=Prompt_Inter_ICSE
+            process_certificate=process_certificate
+
+
     try:
         # year = int(year)
         main_dir = Path(f"uploads")
@@ -74,10 +95,8 @@ async def upload_files(standard : str = Form(...),
             os.remove(file_path_n)
 
         os.rename(file_path,file_path_n)
-        # append_to_excel(data_dict, "certificates.xlsx", file_path_n)
-        # data_response.append(data_dict)
-            
-        return {"Files":"Success","AI":data_dict,}
+        data_dict=process_certificate(data_dict,file_path_new)
+        return {"Files":"Success","AI":data_dict,"Response":response.text}
     except Exception as e:
         return {"Error":str(e)}
     
@@ -85,9 +104,9 @@ async def upload_files(standard : str = Form(...),
 # POST endpoint to receive the data
 @app.post("/convert/")
 async def receive_data(my_data: Dict):
-    global file_path_new,standard
+    global file_path_new
     excel_path = Standard+'_'+Board+'_'+str(Year)+".xlsx"
-    append_to_excel(my_data, excel_path, file_path_new)
+    append_to_excel(my_data, excel_path, file_path_new, Standard, Board)
     return {"received_data": my_data}
 
 @app.get("/download/")

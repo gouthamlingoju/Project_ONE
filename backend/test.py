@@ -1,10 +1,46 @@
 import pandas as pd
 import os
 from openpyxl import load_workbook
+from test1 import postProcess_CBSE_SSC,postProcess_State_Inter,postProcess_State_SSC
 
 
+Prompt_SSC_State=""" extract the data and give 
+Board
+Candidate Name
+Father Name
+Mother Name
+Roll Number
+Date of Birth
+School Name
+Medium
+all Subjects
+CGPA
+Date of Issue
+Identification marks
 
-Prompt_SSC=""" extract the data and give 
+note: for each  subject {Subject Name,Grade} take only 6 subjects and subject name must not be like {'First Language','Second Language','Third Language','Fourth Language','Fifth Language','Sixth Language'} must be like specific subject name
+
+give just dictionary no other stuff
+"""
+
+Prompt_SSC_CBSE=""" extract the data and give 
+Board
+Candidate Name
+Father Name
+Mother Name
+Roll Number
+Date of Birth
+School Name
+all Subjects
+Result
+Date of Issue
+
+note: for each  Subject {Subject Code,Subject Name,Grade} add only 5 subjects in subjects array
+take a separate dict for adiitional subject that is 6th subject if there is no fill this with null values but same keys
+give just dictionary no other stuff
+"""
+
+Prompt_SSC_ICSE=""" extract the data and give 
 Board
 Candidate Name
 Father Name
@@ -23,6 +59,65 @@ note: for each  subject {Name,Grade}
 
 give just dictionary no other stuff
 """
+
+Prompt_Inter_State=""" extract the data and give 
+Board
+Candidate Name
+Father Name
+Mother Name
+Roll Number
+Total Marks
+all Subjects
+Practiacls
+Date of Issue
+
+note: for each  Subject {Subject Name, 1st Yr Marks, 2nd Yr Marks} take only 6 subjects start with part 1 subjects
+for each  Practical {Subject Name, Marks}
+
+
+give just dictionary no other stuff
+"""
+
+Prompt_Inter_CBSE=""" extract the data and give 
+Board
+Candidate Name
+Father Name
+Mother Name
+Roll Number
+Date of Birth
+School Name
+Medium
+Exam Date
+all subjects
+CGPA
+Date of Issue
+Identification marks
+
+note: for each  subject {Name,Grade}
+
+give just dictionary no other stuff
+"""
+
+Prompt_Inter_ICSE=""" extract the data and give 
+Board
+Candidate Name
+Father Name
+Mother Name
+Roll Number
+Date of Birth
+School Name
+Medium
+Exam Date
+all subjects
+CGPA
+Date of Issue
+Identification marks
+
+note: for each  subject {Name,Grade}
+
+give just dictionary no other stuff
+"""
+
 General_Prompt=""" extract the data and give 
 Board
 Candidate Name 
@@ -32,6 +127,8 @@ Roll Number
 Date of Birth
 
 give just dictionary no other stuff"""
+
+
 
 def process_certificate(record,file_path):
     flat_data = {
@@ -47,10 +144,9 @@ def process_certificate(record,file_path):
     
     return flat_data
 
-def append_to_excel(new_record, excel_path, certificate_path):
-    flat_record = process_certificate(new_record,certificate_path)
-    new_data = pd.DataFrame([flat_record])
 
+def append_to_excel(new_record, excel_path, certificate_path, Standard, Board):
+    new_data = pd.DataFrame([new_record])
     if os.path.exists(excel_path):
         existing_data = pd.read_excel(excel_path)
         updated_data = pd.concat([existing_data, new_data], ignore_index=True)
