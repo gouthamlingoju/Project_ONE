@@ -1,40 +1,42 @@
 import React, { useState } from 'react';
+import Select from 'react-select';
 
-const YearDropdown = ({onSelect, Name}) => {
+const YearDropdown = ({ onSelect, Name }) => {
   // Get the current year
   const currentYear = new Date().getFullYear();
 
-  // Generate an array of years (e.g., from 1900 to the current year)
+  // Generate an array of years (e.g., from 1999 to the current year)
   const years = [];
-  for (let year = 1900; year <= currentYear; year++) {
-    years.push(year);
+  for (let year = 1999; year <= currentYear; year++) {
+    years.push({ value: year, label: year });
   }
 
   // Set the default value as the current year
-  const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [selectedYear, setSelectedYear] = useState({ value: currentYear, label: currentYear });
 
   // Handle the change in dropdown selection
-  const handleChange = (event) => {
-    setSelectedYear(event.target.value);
-    console.log(typeof event.target.value);
-    onSelect(event.target.value);
+  const handleChange = (selectedOption) => {
+    setSelectedYear(selectedOption);
+    onSelect(selectedOption.value);
   };
 
   return (
-    <div className='mb-0 basis-1/3 inline-block border rounded-md p-1'>
+    <div className="mb-0 basis-1/3 inline-block border rounded-md p-1">
       <label htmlFor="year">{Name} </label>
-      <select
-        id="year"
+      <Select
         value={selectedYear}
         onChange={handleChange}
-      >
-        {years.map((year) => (
-          <option key={year} value={year}>
-            {year}
-          </option>
-        ))}
-      </select>
-      {/*   <p>Selected Year: {selectedYear}</p> */}
+        options={years}
+        className="react-select-container"
+        classNamePrefix="react-select"
+        styles={{
+          menu: (provided) => ({
+            ...provided,
+            maxHeight: 200, // limits the height of the dropdown to 5 items
+            overflowY: 'auto',
+          }),
+        }}
+      />
     </div>
   );
 };

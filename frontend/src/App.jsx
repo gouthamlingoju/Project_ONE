@@ -2,9 +2,7 @@ import ImageToExcelConverter from './components/ImageToExcelConverter'
 import Vnrheader from './components/Vnrheader'
 import Footer from './components/Footer'
 import React, {useEffect} from 'react'
-import axios from 'axios';
-import Filehandle from './components/Filehandle'
-import ExcelPreview from './components/ExcelPreview'
+
 
 function App() {
 //   useEffect(()=>{
@@ -23,9 +21,7 @@ function App() {
     <div>
       <Vnrheader></Vnrheader>
       <ImageToExcelConverter/>
-      {/* <Filehandle/> */}
       <Footer/>
-      {/* <ExcelPreview></ExcelPreview> */}
     </div>
   )
 }

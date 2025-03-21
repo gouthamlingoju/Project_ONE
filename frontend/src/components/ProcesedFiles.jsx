@@ -19,6 +19,7 @@ const FileDetailBar = ({ processedFiles }) => {
     if (expandedIndex !== index) {
       // Initialize editedData with the current processed file data when opening the pop-up
       setEditedData({ ...processedFiles[index][0] });
+      // console.log(processedFiles)
     }
   };
 
@@ -93,7 +94,7 @@ const FileDetailBar = ({ processedFiles }) => {
                 onClick={(e) => e.stopPropagation()} // Prevent click event from closing the popup
               >
                 {/* Left side - Image */}
-                <div className="flex-shrink-0 w-1/3 mr-4">
+                <div className="flex-shrink-0 w-1/3 mr-4 p-5">
                   {/* Assuming the file is an image, show an image preview */}
                   {processedFile[1].type.startsWith('image') ? (
                     <img
@@ -107,9 +108,8 @@ const FileDetailBar = ({ processedFiles }) => {
                     </div>
                   )}
                 </div>
-
                 {/* Right side - Editable Data */}
-                <div className="flex-grow">
+                <div className="flex-grow w-2/3 p-5 overflow-y-auto">
                   <div className="flex justify-between mb-4">
                     <h3 className="font-semibold text-xl">Processed File {index + 1} Details</h3>
                     <button
@@ -121,6 +121,7 @@ const FileDetailBar = ({ processedFiles }) => {
                   </div>
 
                   {/* Editable Form */}
+                  
                   <form onSubmit={handleSubmit}>
                     {Object.keys(processedFile[0]).map((key) => (
                       <div key={key} className="mb-4 flex items-center">
@@ -135,6 +136,7 @@ const FileDetailBar = ({ processedFiles }) => {
                         />
                       </div>
                     ))}
+                    
 
                     <button
                       onClick={handleButtonClick}
@@ -148,9 +150,9 @@ const FileDetailBar = ({ processedFiles }) => {
                         </div>
                       )}
                   </form>
+                  </div>
                 </div>
               </div>
-            </div>
           )}
         </div>
       ))}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Upload, X } from 'lucide-react';
-import { IoIosArrowDown } from "react-icons/io";
 import './styles.css';
 import ChildMenu from './ChildMenu'; 
 import YearDropdown from './YearDropdown';
@@ -93,7 +92,7 @@ const ImageToExcelConverter = () => {
         if (response.ok) {
           const data = await response.json();
           const processed_file=[data.AI,file]
-          console.log('Data:', data);
+          console.log('Data:', processed_file);
           setProcessedFiles(prev => [...prev, processed_file]);
           // console.log("Processed Files:",processedFiles);
         }else{
@@ -143,7 +142,7 @@ const ImageToExcelConverter = () => {
       <div className="w-1/2 p-10">
         <div className="flex flex-row mt-20">
           <YearDropdown onSelect={handleSelectionYear} Name="Select Year" />
-          <ChildMenu onSelect={handleSelectionStandard} Name="Select Standard" l={["10th Grade", "Intermediate"]} />
+          <ChildMenu onSelect={handleSelectionStandard} Name="Select Class" l={["10th Grade", "Intermediate"]} />
           <ChildMenu onSelect={handleSelectionBoard} Name="Select Board" l={["CBSE", "ICSE", "State Board"]} />
         </div>
         <div className="max-w-4xl mx-auto p-6 mb-8">

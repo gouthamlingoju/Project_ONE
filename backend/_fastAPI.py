@@ -96,11 +96,10 @@ async def upload_files(standard : str = Form(...),
 
         os.rename(file_path,file_path_n)
         data_dict=process_certificate(data_dict,file_path_new)
-        return {"Files":"Success","AI":data_dict,"Response":response.text}
+        return {"Files":"Success","AI":data_dict,"File":str(unique_filename).split('.')[0]}
     except Exception as e:
         return {"Error":str(e)}
     
-
 # POST endpoint to receive the data
 @app.post("/convert/")
 async def receive_data(my_data: Dict):
